@@ -8,12 +8,15 @@ class DataStructure:
         """
         self.soup = soup
 
+        self.clean_soup = self.breakdown_soup()
+
+    def breakdown_soup(self):
+        raise Error("Unimplemented Superclass Method")
+
 
 class ProductPage(DataStructure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.clean_soup = self.breakdown_soup()
 
 
     def breakdown_soup(self):
@@ -27,8 +30,6 @@ class Product(DataStructure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.clean_soup = self.breakdown_soup()
-
     def breakdown_soup(self):
         """
         Return a dictionary of items relevant to a Product (Price, Rating, etc..)
@@ -40,8 +41,6 @@ class Thumbnail(DataStructure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.clean_soup = self.breakdown_soup()
-
     def breakdown_soup(self):
         """
         Return a dictionary of items relevant to a Product's Thumbnail (Price, Rating, Comments, etc..)
@@ -52,8 +51,6 @@ class Thumbnail(DataStructure):
 class Comment(DataStructure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.clean_soup = self.breakdown_soup()
 
     def breakdown_soup(self):
         """
