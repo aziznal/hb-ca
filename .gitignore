@@ -1,6 +1,7 @@
 # Files
 desktop.ini
 geckodriver.exe
+geckodriver.log
 
 # Directories
 __pycache__

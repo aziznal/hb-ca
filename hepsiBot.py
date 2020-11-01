@@ -2,6 +2,11 @@ from basic_web_scraper.BasicSpider import BasicSpider
 from DataStructures import ProductPage, Product, Thumbnail, Comment
 
 
+categories = {
+    "laptop": "https://www.hepsiburada.com/laptop-notebook-dizustu-bilgisayarlar-c-98"
+}
+
+
 class hepsiBot(BasicSpider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
