@@ -10,9 +10,16 @@ categories = {
 
 
 class hepsiBot(BasicSpider):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, url, *args, **kwargs):
+        super().__init__(url=url, *args, **kwargs)
 
+        if url is not None:
+            self.starting_url = url
+        
+        else:
+            self.starting_url = self._browser.current_url
+
+        self.current_page_num = self._infer_current_page_num()
         self.total_page_num = self._get_total_page_num()
 
     def at_page_bottom(self):
@@ -34,12 +41,35 @@ class hepsiBot(BasicSpider):
 
         return page_num
 
+    def _infer_current_page_num(self):
+        
+        current_url = self._browser.current_url
+
+        if current_url == self.starting_url:
+            return 1
+
+        else:
+            page_arg_index = current_url.find('sayfa')
+            page_arg = current_url[page_arg_index:]
+
+            page_arg_value = page_arg.split('=')[-1]
+
+            return page_arg_value
+
 
     def goto_next_page(self):
-        pass
+        
+        self.current_page_num = int(self._infer_current_page_num())
 
-    def goto_prev_page(self):
-        pass
+        if self.current_page_num < self.total_page_num:
+
+            self.current_page_num += 1
+            next_page_url = self.starting_url + "?sayfa=" + str(self.current_page_num)
+
+            self.goto(next_page_url)
+
+        else:
+            raise Exception("Cannot goto next page. Already at final page")
 
 
     def get_all_products(self):

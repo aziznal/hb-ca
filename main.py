@@ -10,6 +10,9 @@ custom_options.set_preference("permissions.default.image", 2)
 def run_program():
     bot = hepsiBot(url=categories['laptop'], options=custom_options)
 
+    bot.goto(categories['laptop'] + "?sayfa=23")
+
+    bot.goto_next_page()
 
 
 if __name__ == "__main__":
