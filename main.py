@@ -10,12 +10,6 @@ custom_options.set_preference("permissions.default.image", 2)
 def run_program():
     bot = hepsiBot(url=categories['laptop'], options=custom_options)
 
-    bot.wait()
-
-    bot.mousewheel_vscroll(10)
-
-    bot.wait()
-
 
 
 if __name__ == "__main__":
