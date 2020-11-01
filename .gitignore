@@ -1,0 +1,7 @@
+# Files
+desktop.ini
+geckodriver.exe
+
+# Directories
+__pycache__
+.vscode
