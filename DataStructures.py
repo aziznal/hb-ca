@@ -93,7 +93,12 @@ class Thumbnail(DataStructure):
 
         else:
             raw_price = self.soup.find('div', attrs={"class": "price-value"})
-            price = float(raw_price.getText().strip().split(' ')[0].replace('.', '').replace(',', '.'))
+
+            if raw_price is not None:
+                price = float(raw_price.getText().strip().split(' ')[0].replace('.', '').replace(',', '.'))
+
+            else:
+                price="Not Available"
             
 
         return price

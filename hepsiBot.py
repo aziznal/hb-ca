@@ -63,6 +63,7 @@ class hepsiBot(BasicSpider):
             next_page_url = self.starting_url + "?sayfa=" + str(self.current_page_num)
 
             self.goto(next_page_url)
+            self.page_soup = BeautifulSoup(self._browser.page_source, features="lxml")
 
         else:
             raise Exception("Cannot goto next page. Already at final page")
