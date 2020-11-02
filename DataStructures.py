@@ -86,9 +86,15 @@ class Thumbnail(DataStructure):
 
     def _extract_price(self):
         
-        raw_price = self.soup.find("span", attrs={"class": "price product-price"}).getText()
+        raw_price = self.soup.find("span", attrs={"class": "price product-price"})
+        
+        if raw_price is not None:
+            price = float(raw_price.getText().replace('.', '').replace(',', '.').split(' ')[0])
 
-        price = float(raw_price.replace('.', '').replace(',', '.').split(' ')[0])
+        else:
+            raw_price = self.soup.find('div', attrs={"class": "price-value"})
+            price = float(raw_price.getText().strip().split(' ')[0].replace('.', '').replace(',', '.'))
+            
 
         return price
 

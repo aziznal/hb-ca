@@ -89,7 +89,7 @@ class hepsiBot(BasicSpider):
         """
         Grab all product thumbnails and returned their parsed version
 
-        :returns: Thumbnail[ ]
+        :returns: list[Thumbnail]
         """
 
         page_soup = BeautifulSoup(self._browser.page_source, features="lxml")
