@@ -2,10 +2,12 @@ from basic_web_scraper.BasicSpider import BasicSpider
 from DataStructures import ProductPage, Product, Thumbnail, Comment
 
 from bs4 import BeautifulSoup
+from unidecode import unidecode
 
 
 categories = {
-    "laptop": "https://www.hepsiburada.com/laptop-notebook-dizustu-bilgisayarlar-c-98"
+    "laptop": "https://www.hepsiburada.com/laptop-notebook-dizustu-bilgisayarlar-c-98",
+    "phone": "https://www.hepsiburada.com/cep-telefonlari-c-371965"
 }
 
 
@@ -21,12 +23,6 @@ class hepsiBot(BasicSpider):
 
         self.current_page_num = self._infer_current_page_num()
         self.total_page_num = self._get_total_page_num()
-
-    def at_page_bottom(self):
-        """
-        Return true if bot has reached the bottom of the page
-        """
-        pass
 
 
     def _get_total_page_num(self):
@@ -72,5 +68,32 @@ class hepsiBot(BasicSpider):
             raise Exception("Cannot goto next page. Already at final page")
 
 
+    def _convert_to_product(self, raw_product):
+        converted_product = Thumbnail(raw_product)
+        return converted_product
+
+    def _get_all_products(self, raw_products):
+        """
+        This method converts given product source code into a python object
+        """
+
+        converted_products = []
+
+        for product in raw_products:
+            converted_products.append(self._convert_to_product(product))
+
+        return converted_products
+
+
     def get_all_products(self):
-        pass
+        """
+        Grab all product thumbnails and returned their parsed version
+
+        :returns: Thumbnail[ ]
+        """
+
+        page_soup = BeautifulSoup(self._browser.page_source, features="lxml")
+
+        products = page_soup.find_all("li", attrs={"class": "search-item"})
+
+        return self._get_all_products(raw_products=products)
