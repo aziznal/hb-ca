@@ -14,18 +14,6 @@ class DataStructure:
         raise Error("Unimplemented Superclass Method")
 
 
-class ProductPage(DataStructure):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-    def breakdown_soup(self):
-        """
-        Return a dictionary of items relevant to a ProductPage (i.e Array of Products)
-        """
-        pass
-
-
 class Product(DataStructure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
