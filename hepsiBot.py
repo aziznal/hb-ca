@@ -1,5 +1,5 @@
 from basic_web_scraper.BasicSpider import BasicSpider
-from DataStructures import ProductPage, Product, Thumbnail, Comment
+from DataStructures import Product, Thumbnail, Comment
 
 from bs4 import BeautifulSoup
 from unidecode import unidecode
