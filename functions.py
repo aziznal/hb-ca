@@ -1,9 +1,8 @@
+import pandas as pd
+
 from hepsiBot import hepsiBot, categories
 from selenium.webdriver.firefox.options import Options
 from unidecode import unidecode
-
-from functions import save_as_csv
-
 
 
 def save_as_csv(data, col_names, filename, overwrite=False):
