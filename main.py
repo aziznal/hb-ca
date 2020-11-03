@@ -1,10 +1,12 @@
-# from hepsiBot import hepsiBot, categories
+from hepsiBot import hepsiBot, categories
 
 from selenium.webdriver.firefox.options import Options
 from unidecode import unidecode
 import pandas as pd
 
-# from functions import save_as_csv
+from bs4 import BeautifulSoup
+
+from functions import save_as_csv
 
 
 FULL_PAGE_SCROLL = 10   # *Only an estimate
@@ -27,11 +29,28 @@ def filter_notebook_data():
 def run_program():
     
     filtered_data = pd.read_csv("notebook_data_comments50Plus.csv")
+
+    product_titles = list(filtered_data['title'])
     product_urls = list(filtered_data['url'])
 
+    comments = {}
 
-    for url in product_urls:
-        print("yo")
+    bot = hepsiBot(options=custom_options, is_product_page=False)
+
+    for title, url in zip(product_titles, product_urls):
+        
+        title = title.replace('"', '').replace("'", "").replace('/', '').replace('\\', '') # replace quotes with nothing
+        url += "-yorumlari"
+        bot.goto(url)
+
+        total_page_num = bot.get_total_page_num_product_page()
+
+        comments[title] = []
+
+        for i in range(2, total_page_num + 1):
+            # comments[title] += bot.scrape_comments()
+            print("Page" + str(i) + " has been scrooped")
+            bot.goto_next_comments_page(starting_url=url, next_page_num=i)
 
 
 

@@ -12,7 +12,7 @@ categories = {
 
 
 class hepsiBot(BasicSpider):
-    def __init__(self, url, *args, **kwargs):
+    def __init__(self, url=None, is_product_page=True, *args, **kwargs):
         super().__init__(url=url, *args, **kwargs)
 
         if url is not None:
@@ -21,8 +21,9 @@ class hepsiBot(BasicSpider):
         else:
             self.starting_url = self._browser.current_url
 
-        self.current_page_num = self._infer_current_page_num()
-        self.total_page_num = self._get_total_page_num()
+        if is_product_page:
+            self.current_page_num = self._infer_current_page_num()
+            self.total_page_num = self._get_total_page_num()
 
 
     def _get_total_page_num(self):
@@ -51,7 +52,6 @@ class hepsiBot(BasicSpider):
             page_arg_value = page_arg.split('=')[-1]
 
             return page_arg_value
-
 
     def goto_next_page(self):
         
@@ -98,3 +98,26 @@ class hepsiBot(BasicSpider):
         products = page_soup.find_all("li", attrs={"class": "search-item"})
 
         return self._get_all_products(raw_products=products)
+
+    
+    def get_product_page_source(self):
+        return self._browser.page_source
+
+
+    def get_total_page_num_product_page(self):
+        pagination_element = self._browser.find_elements_by_class_name("hermes-PaginationBar-module-3qhrm")
+        
+        if pagination_element is not None and len(pagination_element) > 0:
+            pagination_soup = BeautifulSoup(pagination_element[0].get_attribute("innerHTML"), features="lxml")
+
+            page_num = pagination_soup.findAll("li")[-1].getText()
+
+        else:
+            page_num = -1
+
+        return int(page_num)
+
+    def goto_next_comments_page(self, starting_url, next_page_num):
+        next_page_url = starting_url + "?sayfa=" + str(next_page_num)
+        self.goto(next_page_url)
+
