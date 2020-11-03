@@ -4,6 +4,7 @@ geckodriver.exe
 geckodriver.log
 dict_saver.py
 random_file.csv
+reading_data.py
 
 # Directories
 __pycache__
