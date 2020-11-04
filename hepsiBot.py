@@ -104,7 +104,7 @@ class hepsiBot(BasicSpider):
         return self._browser.page_source
 
 
-    def get_total_page_num_product_page(self):
+    def get_total_comments_page_num(self):
         pagination_element = self._browser.find_elements_by_class_name("hermes-PaginationBar-module-3qhrm")
         
         if pagination_element is not None and len(pagination_element) > 0:
@@ -121,3 +121,20 @@ class hepsiBot(BasicSpider):
         next_page_url = starting_url + "?sayfa=" + str(next_page_num)
         self.goto(next_page_url)
 
+    def _get_comment_body(self, comment_body):
+        return Comment(comment_body)
+
+    def scrape_comments(self):
+        """
+        :returns: List[Comment]
+        """
+
+        soup = BeautifulSoup(self._browser.page_source, features="lxml")
+
+        comment_container = soup.find('div', attrs={'class': 'paginationContentHolder'})
+
+        raw_comments = comment_container.findChildren(recursive=False)
+
+        comments = [self._get_comment_body(comment) for comment in raw_comments]
+
+        return comments

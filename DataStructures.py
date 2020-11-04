@@ -143,6 +143,7 @@ class Comment(DataStructure):
         try:
             body = self.soup.find("div", attrs={"class": "hermes-ReviewCard-module-2dVP9"}).getText()
             body = ' '.join(body.split())   # To clear the crazy amount of spaces in the text
+            body = f"\"{body}\""    # Surround with quotes for .csv formatting
     
         except Exception as e:
             body = "NO_COMMENT"
