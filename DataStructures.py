@@ -11,7 +11,7 @@ class DataStructure:
         self.clean_soup = self.breakdown_soup()
 
     def breakdown_soup(self):
-        raise Error("Unimplemented Superclass Method")
+        raise Exception("Unimplemented Superclass Method")
 
 
 class Product(DataStructure):
@@ -126,11 +126,43 @@ class Comment(DataStructure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
+    def _extract_comment_author(self):
+        raw_author = self.soup.find('div', attrs={'class': 'hermes-ReviewCard-module-1-Wp3'})
+
+        author = ' '.join(raw_author.getText().strip().split())
+
+        return author
+
+    def _extract_author_rating(self):
+        raw_rating = self.soup.find('div', attrs={'itemprop': 'reviewRating'})
+        rating = raw_rating.find('span', attrs={'itemprop': 'ratingValue'})['content']
+        return rating
+
+    def _extract_comment_body(self):
+        try:
+            body = self.soup.find("div", attrs={"class": "hermes-ReviewCard-module-2dVP9"}).getText()
+            body = ' '.join(body.split())   # To clear the crazy amount of spaces in the text
+    
+        except Exception as e:
+            body = "NO_COMMENT"
+
+        return body
+
     def breakdown_soup(self):
         """
         Return a dictionary of items relevant to a Comment (Author, Body, Rating, etc..)
         """
-        pass
+        
+        comment_body = self._extract_comment_body()
+        author = self._extract_comment_author()
+        author_rating = self._extract_author_rating()
+
+        return {
+            "author": author,
+            "author_rating": author_rating,
+            "body": comment_body
+        }
 
 
 
@@ -146,6 +178,28 @@ def test_thumbnail_class():
     [print(f"{key}: {val}\n") for key, val in thumby.clean_soup.items()]
 
 
+def test_comment_class():
+    with open("product_comment_templates/raw_product_comment_page.html", "r", encoding="utf-8") as file:
+
+        raw_html = file.read()
+
+    soup = BeautifulSoup(raw_html, features="lxml")
+
+    comment_container = soup.find("div", attrs={"class": "paginationContentHolder"})
+
+    comments = comment_container.findChildren(recursive=False)
+
+    for comment in comments:
+        test_comment = Comment(comment)
+
+        [print(f"{key}: {val}\n") for key, val in test_comment.clean_soup.items()]
+
+        print("_"*75 + "\n")
+
+
 
 if __name__ == "__main__":
-    test_thumbnail_class()
+    # test_thumbnail_class()
+
+    test_comment_class()
+
