@@ -1,6 +1,8 @@
+import selenium
 from hepsiBot import hepsiBot, categories
 
 from selenium.webdriver.firefox.options import Options
+from selenium.common.exceptions import TimeoutException
 from unidecode import unidecode
 import pandas as pd
 
@@ -43,7 +45,7 @@ def save_collected_comments(filename, data, real_rating):
     
     colnames = "author,author_rating,body,real_rating"
 
-    with open( "scraped_data/"  + filename, "w", encoding="utf-8") as file:
+    with open( "scraped_data/phone_comments/"  + filename, "w", encoding="utf-8") as file:
         file.write(colnames + "\n")
         for comment in data:
             line = ",".join(list(comment.clean_soup.values()))
@@ -53,7 +55,8 @@ def save_collected_comments(filename, data, real_rating):
 
 def run_program():
     
-    filtered_data = pd.read_csv("notebook_data_comments50Plus.csv")
+    # filtered_data = pd.read_csv("notebook_data_comments50Plus.csv")
+    filtered_data = pd.read_csv("./phone_data_comments100Plus.csv")
 
     product_titles = list(filtered_data['title'])
     product_urls = list(filtered_data['url'])
@@ -73,11 +76,18 @@ def run_program():
 
         comments[title] = []
 
-        for i in range(2, total_page_num + 1):
-            bot.mousewheel_vscroll(3)
-            comments[title] += bot.scrape_comments()
+        for i in range(1, total_page_num + 1):
+            try:
+                bot.goto_next_comments_page(starting_url=url, next_page_num=i)
+            except TimeoutException as t:
+                continue
+            # bot.mousewheel_vscroll(3)
+            try:
+                comments[title] += bot.scrape_comments()
+            except Exception:
+                continue    
             print("Scraped Page " + str(i - 1))
-            bot.goto_next_comments_page(starting_url=url, next_page_num=i)
+
         
         print("\n")
 
