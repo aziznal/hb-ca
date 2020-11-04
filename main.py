@@ -1,4 +1,3 @@
-from functools import total_ordering
 from hepsiBot import hepsiBot, categories
 
 from selenium.webdriver.firefox.options import Options
@@ -91,6 +90,14 @@ def run_program():
         print("\nSaved comments for " + title + "\n")
 
 
+def extract_phones_w_100plus_comments():
+    phone_data = pd.read_csv("./scraped_data/phone_thumbnails.csv") 
+
+    filtered_data = phone_data[phone_data['comment_amount'] > 100]
+    
+    filtered_data.to_csv("phone_data_comments100Plus.csv")
+
 
 if __name__ == "__main__":
     run_program()
+    # extract_phones_w_100plus_comments()
